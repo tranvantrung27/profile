@@ -1,0 +1,266 @@
+/* ===== HEART CONTAINER ===== */
+.heart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    position: relative;
+}
+
+/* ===== CHECKBOX HIDDEN ===== */
+.checkbox {
+    display: none;
+}
+
+/* ===== SVG CONTAINER ===== */
+.svg-container {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.svg-container:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 35px rgba(255, 107, 107, 0.3);
+}
+
+/* ===== HEART SVG STYLES ===== */
+.svg-outline,
+.svg-filled {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    transition: all 0.3s ease;
+}
+
+.svg-outline {
+    fill: rgba(255, 255, 255, 0.7);
+    opacity: 1;
+}
+
+.svg-filled {
+    fill: #ff6b6b;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+/* ===== CELEBRATION SVG ===== */
+.svg-celebrate {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.svg-celebrate polygon {
+    fill: #ffd700;
+}
+
+/* ===== CHECKED STATE ===== */
+.checkbox:checked + .svg-container .svg-outline {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.checkbox:checked + .svg-container .svg-filled {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    animation: heartBeat 0.6s ease-in-out;
+}
+
+.checkbox:checked + .svg-container .svg-celebrate {
+    opacity: 1;
+    animation: celebrate 0.8s ease-out;
+}
+
+.checkbox:checked + .svg-container {
+    animation: heartPulse 0.6s ease-in-out;
+}
+
+/* ===== LIKE COUNT ===== */
+.like-count {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    min-width: 60px;
+    text-align: center;
+}
+
+.checkbox:checked ~ .like-count {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8a80 100%);
+    color: white;
+    transform: scale(1.1);
+    animation: countUp 0.3s ease-out;
+}
+
+/* ===== HEART ANIMATIONS ===== */
+@keyframes heartBeat {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+    }
+    25% {
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    75% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes heartPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes celebrate {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0) rotate(0deg);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2) rotate(180deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0) rotate(360deg);
+    }
+}
+
+@keyframes countUp {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+/* ===== FLOATING HEARTS EFFECT ===== */
+.floating-hearts {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.floating-heart {
+    position: absolute;
+    color: #ff6b6b;
+    font-size: 1.5rem;
+    animation: floatHeart 2s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes floatHeart {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(0);
+    }
+    15% {
+        transform: translateY(-10px) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(0);
+    }
+}
+
+/* ===== HEART TITLE ===== */
+.heart-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .svg-container {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .svg-outline,
+    .svg-filled {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .svg-celebrate {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .like-count {
+        font-size: 1.1rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .heart-container {
+        margin-top: 1.5rem;
+    }
+    
+    .svg-container {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .svg-outline,
+    .svg-filled {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .like-count {
+        font-size: 1rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
