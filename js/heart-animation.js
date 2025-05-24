@@ -22,6 +22,8 @@ class HeartAnimation {
         this.createHeartComponent();
         this.setupEventListeners();
         this.loadHeartData();
+        // Cập nhật số lượt thích ban đầu
+        this.updateLikeCount();
         Utils.log('Heart Animation initialized', 'success');
     }
 
@@ -182,25 +184,24 @@ class HeartAnimation {
     }
 
     performLike() {
-        this.currentCount++;
-        this.heartData.totalLikes = this.currentCount;
-        this.heartData.lastLiked = Date.now();
-        this.heartData.isLiked = true;
-
-        // Update count display
-        this.updateLikeCount();
-
-        // Create celebration effects
-        this.createCelebrationEffect();
-        this.createFloatingHearts();
-        this.addHeartBeat();
+        // Gửi request tăng lượt thích
+        fetch('http://localhost:3000/api/likes', {
+            method: 'POST'
+        })
+        .then(() => {
+            // Cập nhật số lượt thích mới
+            this.updateLikeCount();
+            
+            // Tạo hiệu ứng
+            this.createCelebrationEffect();
+            this.createFloatingHearts();
+            this.addHeartBeat();
+        });
 
         // Haptic feedback on mobile
         if (Utils.isTouchDevice() && navigator.vibrate) {
             navigator.vibrate(50);
         }
-
-        Utils.log('Heart liked', 'success');
     }
 
     performUnlike() {
@@ -223,22 +224,28 @@ class HeartAnimation {
     updateLikeCount() {
         if (!this.likeCount) return;
 
-        // Animate count change
-        this.likeCount.style.transform = 'scale(1.3)';
-        this.likeCount.textContent = this.formatCount(this.currentCount);
-        
-        setTimeout(() => {
-            this.likeCount.style.transform = 'scale(1)';
-        }, 200);
+        // Lấy số lượt thích từ server
+        fetch('http://localhost:3000/api/stats')
+            .then(res => res.json())
+            .then(data => {
+                // Animate count change
+                this.likeCount.style.transform = 'scale(1.3)';
+                this.likeCount.textContent = this.formatCount(data.likes);
+                
+                setTimeout(() => {
+                    this.likeCount.style.transform = 'scale(1)';
+                }, 200);
 
-        // Color animation based on count
-        if (this.currentCount > 0) {
-            this.likeCount.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ff8a80 100%)';
-            this.likeCount.style.color = 'white';
-        } else {
-            this.likeCount.style.background = 'rgba(255, 255, 255, 0.1)';
-            this.likeCount.style.color = 'rgba(255, 255, 255, 0.9)';
-        }
+                // Color animation based on count
+                if (data.likes > 0) {
+                    this.likeCount.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ff8a80 100%)';
+                    this.likeCount.style.color = 'white';
+                } else {
+                    this.likeCount.style.background = 'rgba(255, 255, 255, 0.1)';
+                    this.likeCount.style.color = 'rgba(255, 255, 255, 0.9)';
+                }
+            })
+            .catch(err => console.error('Lỗi khi cập nhật số lượt thích:', err));
     }
 
     formatCount(count) {
